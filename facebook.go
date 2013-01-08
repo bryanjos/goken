@@ -7,6 +7,9 @@ import (
 	"time"
 )
 
+type FacebookPlugin struct{
+}
+
 type tFacebookSearchDummy struct {
 	Object tFacebookSearch
 }
@@ -27,7 +30,7 @@ type tFacebookSearchResultFrom struct {
 	Name string
 }
 
-func Facebook_GetData(job Job) ([]Information, error) {
+func (f * FacebookPlugin) GetData(job Job) ([]Information, error) {
 	tags := strings.Join(job.Tags, " ")
 	since := fmt.Sprintf("&since:%d", job.Time.Unix())
 	geocode := fmt.Sprintf("&center=%f,%f&distance=%d", job.Coordinates[1], job.Coordinates[0], job.Distance)

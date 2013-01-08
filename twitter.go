@@ -7,6 +7,9 @@ import (
 	"time"
 )
 
+type TwitterPlugin struct{
+}
+
 type tTwitterSearchDummy struct {
 	Object tTwitterSearch
 }
@@ -27,7 +30,7 @@ type tTwitterSearchResultGeo struct {
 	Coordinates []float32
 }
 
-func Twitter_GetData(job Job) ([]Information, error) {
+func (t *TwitterPlugin) GetData(job Job) ([]Information, error) {
 	tags := strings.Join(job.Tags, " OR ") + "%20"
 	since := fmt.Sprintf("since:%d-%02d-%02d", job.Time.Year(), job.Time.Month(), job.Time.Day())
 	geocode := fmt.Sprintf("&geocode=%f,%f,%fmi", job.Coordinates[1], job.Coordinates[0], job.Distance)

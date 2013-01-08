@@ -16,6 +16,10 @@ func main() {
 	start()
 }
 
+type Plugin interface {
+	GetData(Job) ([]Information, error)
+}
+
 func start() {
 	fmt.Println("Starting")
 
