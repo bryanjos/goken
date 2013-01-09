@@ -30,7 +30,7 @@ type tTwitterSearchResultGeo struct {
 	Coordinates []float32
 }
 
-func (t *TwitterPlugin) GetData(job Job, c chan []Information) error {
+func (t *TwitterPlugin) GetData(job Job, c chan InformationCollection) error {
 	tags := strings.Join(job.Tags, " OR ") + "%20"
 	since := fmt.Sprintf("since:%d-%02d-%02d", job.Time.Year(), job.Time.Month(), job.Time.Day())
 	geocode := fmt.Sprintf("&geocode=%f,%f,%fmi", job.Coordinates[1], job.Coordinates[0], job.Distance)

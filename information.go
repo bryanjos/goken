@@ -16,7 +16,19 @@ type Information struct {
 	JobSlug     string
 }
 
-func ListInformation(slug string, since time.Time) ([]Information, error) {
+type InformationCollection []Information
+
+func (s InformationCollection) Len() int {
+	return len(s)
+}
+func (s InformationCollection) Less(i, j int) bool {
+	return s[i].Time.Unix() < s[j].Time.Unix()
+}
+func (s InformationCollection) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+func ListInformation(slug string, since time.Time) (InformationCollection, error) {
 	session, err := mgo.Dial(SERVER_NAME)
 	if err != nil {
 		return nil, err
@@ -41,7 +53,7 @@ func SaveInformation(job Information) error {
 	}
 	defer session.Close()
 
-	c := session.DB("ken").C(INFO_COLLECTION)
+	c := session.DB(DB_NAME).C(INFO_COLLECTION)
 
 	_, err = c.Upsert(bson.M{"id": job.Id}, &job)
 

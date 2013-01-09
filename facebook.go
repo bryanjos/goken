@@ -34,7 +34,7 @@ type tFacebookSearchResultFrom struct {
 	Name string
 }
 
-func (f *FacebookPlugin) GetData(job Job, c chan []Information) error {
+func (f *FacebookPlugin) GetData(job Job, c chan InformationCollection) error {
 	tags := strings.Join(job.Tags, " ")
 	since := fmt.Sprintf("&since:%d", job.Time.Unix())
 	geocode := fmt.Sprintf("&center=%f,%f&distance=%d", job.Coordinates[1], job.Coordinates[0], job.Distance)
