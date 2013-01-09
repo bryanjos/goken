@@ -17,7 +17,7 @@ type Job struct {
 }
 
 func ListJobs() ([]Job, error) {
-	session, err := mgo.Dial(SERVER_NAME)
+	session, err := mgo.Dial(MONGODB_SERVER)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func ListJobs() ([]Job, error) {
 }
 
 func GetJob(slug string) (Job, error) {
-	session, err := mgo.Dial(SERVER_NAME)
+	session, err := mgo.Dial(MONGODB_SERVER)
 	if err != nil {
 		return Job{}, err
 	}
@@ -53,7 +53,7 @@ func GetJob(slug string) (Job, error) {
 }
 
 func SaveJob(job Job) error {
-	session, err := mgo.Dial(SERVER_NAME)
+	session, err := mgo.Dial(MONGODB_SERVER)
 	if err != nil {
 		return err
 	}

@@ -29,7 +29,7 @@ func (s InformationCollection) Swap(i, j int) {
 }
 
 func ListInformation(slug string, since time.Time) (InformationCollection, error) {
-	session, err := mgo.Dial(SERVER_NAME)
+	session, err := mgo.Dial(MONGODB_SERVER)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func ListInformation(slug string, since time.Time) (InformationCollection, error
 }
 
 func SaveInformation(job Information) error {
-	session, err := mgo.Dial(SERVER_NAME)
+	session, err := mgo.Dial(MONGODB_SERVER)
 	if err != nil {
 		return err
 	}

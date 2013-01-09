@@ -13,14 +13,17 @@ const (
 	DB_NAME         = "ken"
 	JOB_COLLECTION  = "jobs"
 	INFO_COLLECTION = "job_info"
-	SERVER_NAME     = "localhost"
+	MONGODB_SERVER  = "localhost"
+	SERVER_PORT 	= ":3000"
+
 )
 
 func main() {
-	Start()
+	go StartCollector()
+	StartServer()
 }
 
-func Start() {
+func StartCollector() {
 	fmt.Println("Starting")
 	CreateIndexes()
 	for{
@@ -64,7 +67,7 @@ func DoYourJob(job Job) {
 }
 
 func CreateIndexes(){
-	session, _ := mgo.Dial(SERVER_NAME)
+	session, _ := mgo.Dial(MONGODB_SERVER)
 	defer session.Close()
 
 	c := session.DB(DB_NAME).C(JOB_COLLECTION)
