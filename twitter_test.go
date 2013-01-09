@@ -6,9 +6,10 @@ import (
 )
 
 func Test_Twitter_GetData(t *testing.T) {
+	info := make(chan []Information)
 	job := Job{"Test", "test", time.Now().UTC(), []string{"test"}, [2]float32{-90, 30}, 30, time.Now().UTC()}
 	tp := TwitterPlugin{}
-	_, err := tp.GetData(job)
+	err := tp.GetData(job, info)
 	if err != nil {
 		t.Log(err)
 		t.Fail()

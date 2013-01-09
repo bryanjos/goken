@@ -7,7 +7,11 @@ import (
 	"time"
 )
 
-type FacebookPlugin struct{
+type Plugin interface {
+	GetData(Job) ([]Information, error)
+}
+
+type FacebookPlugin struct {
 }
 
 type tFacebookSearchDummy struct {
@@ -30,7 +34,7 @@ type tFacebookSearchResultFrom struct {
 	Name string
 }
 
-func (f * FacebookPlugin) GetData(job Job) ([]Information, error) {
+func (f *FacebookPlugin) GetData(job Job, c chan []Information) error {
 	tags := strings.Join(job.Tags, " ")
 	since := fmt.Sprintf("&since:%d", job.Time.Unix())
 	geocode := fmt.Sprintf("&center=%f,%f&distance=%d", job.Coordinates[1], job.Coordinates[0], job.Distance)
@@ -42,7 +46,7 @@ func (f * FacebookPlugin) GetData(job Job) ([]Information, error) {
 	err := json.Unmarshal([]uint8(jsonStr), &results)
 
 	if err != nil {
-		return []Information{}, err
+		return  err
 	}
 
 	info_list := make([]Information, len(results.Object.Data))
@@ -54,5 +58,7 @@ func (f * FacebookPlugin) GetData(job Job) ([]Information, error) {
 		info_list[i] = info
 	}
 
-	return info_list, nil
+	c <- info_list
+
+	return nil
 }
