@@ -29,16 +29,16 @@ func (s InformationCollection) Swap(i, j int) {
 }
 
 func ListInformation(slug string, since time.Time) (InformationCollection, error) {
-	session, err := mgo.Dial(MONGODB_SERVER)
+	session, err := mgo.Dial(Configuration.MongoDB_Server)
 	if err != nil {
 		return nil, err
 	}
 	defer session.Close()
 
-	c := session.DB(DB_NAME).C(INFO_COLLECTION)
+	c := session.DB(Configuration.DB_Name).C(Configuration.Info_Collection)
 
 	results := []Information{}
-	err = c.Find(bson.D{{"jobslug", slug}, {"Time", bson.D{{"$lt", since}}}}).Limit(PAGE_SIZE).All(&results)
+	err = c.Find(bson.D{{"jobslug", slug}, {"Time", bson.D{{"$lt", since}}}}).Limit(Configuration.Page_Size).All(&results)
 	if err != nil {
 		return nil, err
 	}
@@ -47,13 +47,13 @@ func ListInformation(slug string, since time.Time) (InformationCollection, error
 }
 
 func SaveInformation(job Information) error {
-	session, err := mgo.Dial(MONGODB_SERVER)
+	session, err := mgo.Dial(Configuration.MongoDB_Server)
 	if err != nil {
 		return err
 	}
 	defer session.Close()
 
-	c := session.DB(DB_NAME).C(INFO_COLLECTION)
+	c := session.DB(Configuration.DB_Name).C(Configuration.Info_Collection)
 
 	_, err = c.Upsert(bson.M{"id": job.Id}, &job)
 

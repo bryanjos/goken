@@ -2,31 +2,21 @@ package main
 
 import (
 	"fmt"
-	"time"
-	"sort"
 	"labix.org/v2/mgo"
-)
-
-
-const (
-	PAGE_SIZE       = 40
-	DB_NAME         = "ken"
-	JOB_COLLECTION  = "jobs"
-	INFO_COLLECTION = "job_info"
-	MONGODB_SERVER  = "localhost"
-	SERVER_PORT 	= ":3000"
-
+	"sort"
+	"time"
 )
 
 func main() {
-	go StartCollector()
+	Configuration = InitConfig()
+	go Collect()
 	StartServer()
 }
 
-func StartCollector() {
+func Collect() {
 	fmt.Println("Starting")
 	CreateIndexes()
-	for{
+	for {
 		fmt.Println("Getting Jobs")
 		jobs, _ := ListJobs()
 
@@ -41,7 +31,6 @@ func StartCollector() {
 	fmt.Println("Stopping")
 }
 
-
 func DoYourJob(job Job) {
 
 	info := make(chan InformationCollection)
@@ -52,11 +41,11 @@ func DoYourJob(job Job) {
 	go twitterPlugin.GetData(job, info)
 	go facebookPlugin.GetData(job, info)
 
-	results := append(<- info, <- info...)
+	results := append(<-info, <-info...)
 
 	sort.Sort(results)
 
-	for i:=0; i < len(results); i++ {
+	for i := 0; i < len(results); i++ {
 		SaveInformation(results[i])
 	}
 
@@ -66,29 +55,29 @@ func DoYourJob(job Job) {
 
 }
 
-func CreateIndexes(){
-	session, _ := mgo.Dial(MONGODB_SERVER)
+func CreateIndexes() {
+	session, _ := mgo.Dial(Configuration.MongoDB_Server)
 	defer session.Close()
 
-	c := session.DB(DB_NAME).C(JOB_COLLECTION)
+	c := session.DB(Configuration.DB_Name).C(Configuration.Job_Collection)
 
 	index := mgo.Index{
-		Key: []string{"slug"},
-		Unique: true,
-		DropDups: true,
+		Key:        []string{"slug"},
+		Unique:     true,
+		DropDups:   true,
 		Background: true,
-		Sparse: true,
+		Sparse:     true,
 	}
 	_ = c.EnsureIndex(index)
 
-	c = session.DB(DB_NAME).C(INFO_COLLECTION)
+	c = session.DB(Configuration.DB_Name).C(Configuration.Job_Collection)
 
 	index = mgo.Index{
-		Key: []string{"jobslug", "-time"},
-		Unique: false,
-		DropDups: false,
+		Key:        []string{"jobslug", "-time"},
+		Unique:     false,
+		DropDups:   false,
 		Background: true,
-		Sparse: true,
+		Sparse:     true,
 	}
 	_ = c.EnsureIndex(index)
 }

@@ -46,7 +46,7 @@ func (f *FacebookPlugin) GetData(job Job, c chan InformationCollection) error {
 	err := json.Unmarshal([]uint8(jsonStr), &results)
 
 	if err != nil {
-		return  err
+		return err
 	}
 
 	info_list := make([]Information, len(results.Object.Data))

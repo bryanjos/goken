@@ -17,13 +17,13 @@ type Job struct {
 }
 
 func ListJobs() ([]Job, error) {
-	session, err := mgo.Dial(MONGODB_SERVER)
+	session, err := mgo.Dial(Configuration.MongoDB_Server)
 	if err != nil {
 		return nil, err
 	}
 	defer session.Close()
 
-	c := session.DB(DB_NAME).C(JOB_COLLECTION)
+	c := session.DB(Configuration.DB_Name).C(Configuration.Job_Collection)
 
 	results := []Job{}
 	err = c.Find(bson.M{}).All(&results)
@@ -35,13 +35,13 @@ func ListJobs() ([]Job, error) {
 }
 
 func GetJob(slug string) (Job, error) {
-	session, err := mgo.Dial(MONGODB_SERVER)
+	session, err := mgo.Dial(Configuration.MongoDB_Server)
 	if err != nil {
 		return Job{}, err
 	}
 	defer session.Close()
 
-	c := session.DB(DB_NAME).C(JOB_COLLECTION)
+	c := session.DB(Configuration.DB_Name).C(Configuration.Job_Collection)
 
 	result := Job{}
 	err = c.Find(bson.M{"slug": slug}).One(&result)
@@ -53,13 +53,13 @@ func GetJob(slug string) (Job, error) {
 }
 
 func SaveJob(job Job) error {
-	session, err := mgo.Dial(MONGODB_SERVER)
+	session, err := mgo.Dial(Configuration.MongoDB_Server)
 	if err != nil {
 		return err
 	}
 	defer session.Close()
 
-	c := session.DB(DB_NAME).C(JOB_COLLECTION)
+	c := session.DB(Configuration.DB_Name).C(Configuration.Job_Collection)
 
 	_, err = c.Upsert(bson.M{"slug": job.Slug}, &job)
 

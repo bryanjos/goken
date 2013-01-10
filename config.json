@@ -1,0 +1,8 @@
+config: {
+	"page_size":40,
+	"db_name":"ken"
+	"job_collection":"jobs"
+	"info_collection":"job_info"
+	"mongodb_server":"localhost"
+	"server_port":"3000"
+}
